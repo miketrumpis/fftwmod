@@ -1,0 +1,6 @@
+*.so
+build/
+*.pyc
+*.*~
+# Mac droppings
+.DS_Store
