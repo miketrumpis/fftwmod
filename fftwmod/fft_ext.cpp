@@ -1128,930 +1128,6 @@ static blitz::Array<T,N> py_to_blitz(PyArrayObject* arr_obj,const char* name)
 }
 
 
-static PyObject* _fft_F_1(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_1",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,1,"a");
-        blitz::Array<std::complex<float> ,1> a = convert_to_blitz<std::complex<float> ,1>(a_array,"a");
-        blitz::TinyVector<int,1> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,1,"b");
-        blitz::Array<std::complex<float> ,1> b = convert_to_blitz<std::complex<float> ,1>(b_array,"b");
-        blitz::TinyVector<int,1> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_2(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_2",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,2,"a");
-        blitz::Array<std::complex<float> ,2> a = convert_to_blitz<std::complex<float> ,2>(a_array,"a");
-        blitz::TinyVector<int,2> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,2,"b");
-        blitz::Array<std::complex<float> ,2> b = convert_to_blitz<std::complex<float> ,2>(b_array,"b");
-        blitz::TinyVector<int,2> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_3(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_3",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,3,"a");
-        blitz::Array<std::complex<float> ,3> a = convert_to_blitz<std::complex<float> ,3>(a_array,"a");
-        blitz::TinyVector<int,3> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,3,"b");
-        blitz::Array<std::complex<float> ,3> b = convert_to_blitz<std::complex<float> ,3>(b_array,"b");
-        blitz::TinyVector<int,3> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_4(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_4",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,4,"a");
-        blitz::Array<std::complex<float> ,4> a = convert_to_blitz<std::complex<float> ,4>(a_array,"a");
-        blitz::TinyVector<int,4> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,4,"b");
-        blitz::Array<std::complex<float> ,4> b = convert_to_blitz<std::complex<float> ,4>(b_array,"b");
-        blitz::TinyVector<int,4> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_5(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_5",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,5,"a");
-        blitz::Array<std::complex<float> ,5> a = convert_to_blitz<std::complex<float> ,5>(a_array,"a");
-        blitz::TinyVector<int,5> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,5,"b");
-        blitz::Array<std::complex<float> ,5> b = convert_to_blitz<std::complex<float> ,5>(b_array,"b");
-        blitz::TinyVector<int,5> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_6(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_6",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,6,"a");
-        blitz::Array<std::complex<float> ,6> a = convert_to_blitz<std::complex<float> ,6>(a_array,"a");
-        blitz::TinyVector<int,6> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,6,"b");
-        blitz::Array<std::complex<float> ,6> b = convert_to_blitz<std::complex<float> ,6>(b_array,"b");
-        blitz::TinyVector<int,6> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_7(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_7",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,7,"a");
-        blitz::Array<std::complex<float> ,7> a = convert_to_blitz<std::complex<float> ,7>(a_array,"a");
-        blitz::TinyVector<int,7> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,7,"b");
-        blitz::Array<std::complex<float> ,7> b = convert_to_blitz<std::complex<float> ,7>(b_array,"b");
-        blitz::TinyVector<int,7> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_8(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_8",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,8,"a");
-        blitz::Array<std::complex<float> ,8> a = convert_to_blitz<std::complex<float> ,8>(a_array,"a");
-        blitz::TinyVector<int,8> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,8,"b");
-        blitz::Array<std::complex<float> ,8> b = convert_to_blitz<std::complex<float> ,8>(b_array,"b");
-        blitz::TinyVector<int,8> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_9(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_9",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,9,"a");
-        blitz::Array<std::complex<float> ,9> a = convert_to_blitz<std::complex<float> ,9>(a_array,"a");
-        blitz::TinyVector<int,9> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,9,"b");
-        blitz::Array<std::complex<float> ,9> b = convert_to_blitz<std::complex<float> ,9>(b_array,"b");
-        blitz::TinyVector<int,9> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_10(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_10",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,10,"a");
-        blitz::Array<std::complex<float> ,10> a = convert_to_blitz<std::complex<float> ,10>(a_array,"a");
-        blitz::TinyVector<int,10> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,10,"b");
-        blitz::Array<std::complex<float> ,10> b = convert_to_blitz<std::complex<float> ,10>(b_array,"b");
-        blitz::TinyVector<int,10> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
-static PyObject* _fft_F_11(PyObject*self, PyObject* args, PyObject* kywds)
-{
-    py::object return_val;
-    int exception_occured = 0;
-    PyObject *py_local_dict = NULL;
-    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
-    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
-    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
-    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
-    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
-    
-    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_11",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
-       return NULL;
-    try                              
-    {                                
-        py_a = py_a;
-        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
-        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
-        conversion_numpy_check_size(a_array,11,"a");
-        blitz::Array<std::complex<float> ,11> a = convert_to_blitz<std::complex<float> ,11>(a_array,"a");
-        blitz::TinyVector<int,11> Na = a.shape();
-        a_used = 1;
-        py_b = py_b;
-        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
-        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
-        conversion_numpy_check_size(b_array,11,"b");
-        blitz::Array<std::complex<float> ,11> b = convert_to_blitz<std::complex<float> ,11>(b_array,"b");
-        blitz::TinyVector<int,11> Nb = b.shape();
-        b_used = 1;
-        py_adims = py_adims;
-        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
-        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
-        conversion_numpy_check_size(adims_array,1,"adims");
-        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
-        blitz::TinyVector<int,1> Nadims = adims.shape();
-        adims_used = 1;
-        py_fft_sign = py_fft_sign;
-        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
-        fft_sign_used = 1;
-        py_shift = py_shift;
-        int shift = convert_to_int(py_shift,"shift");
-        shift_used = 1;
-        py_inplace = py_inplace;
-        int inplace = convert_to_int(py_inplace,"inplace");
-        inplace_used = 1;
-        /*<function call here>*/     
-        
-                if(inplace) {
-                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
-                } else {
-                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
-                }
-        if(py_local_dict)                                  
-        {                                                  
-            py::dict local_dict = py::dict(py_local_dict); 
-        }                                                  
-    
-    }                                
-    catch(...)                       
-    {                                
-        return_val =  py::object();      
-        exception_occured = 1;       
-    }                                
-    /*cleanup code*/                     
-    if(a_used)
-    {
-        Py_XDECREF(py_a);
-    }
-    if(b_used)
-    {
-        Py_XDECREF(py_b);
-    }
-    if(adims_used)
-    {
-        Py_XDECREF(py_adims);
-    }
-    if(!(PyObject*)return_val && !exception_occured)
-    {
-                                  
-        return_val = Py_None;            
-    }
-                                  
-    return return_val.disown();           
-}                                
 static PyObject* _fft_D_1(PyObject*self, PyObject* args, PyObject* kywds)
 {
     py::object return_val;
@@ -2976,21 +2052,934 @@ static PyObject* _fft_D_11(PyObject*self, PyObject* args, PyObject* kywds)
                                   
     return return_val.disown();           
 }                                
+static PyObject* _fft_F_1(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_1",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,1,"a");
+        blitz::Array<std::complex<float> ,1> a = convert_to_blitz<std::complex<float> ,1>(a_array,"a");
+        blitz::TinyVector<int,1> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,1,"b");
+        blitz::Array<std::complex<float> ,1> b = convert_to_blitz<std::complex<float> ,1>(b_array,"b");
+        blitz::TinyVector<int,1> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_2(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_2",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,2,"a");
+        blitz::Array<std::complex<float> ,2> a = convert_to_blitz<std::complex<float> ,2>(a_array,"a");
+        blitz::TinyVector<int,2> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,2,"b");
+        blitz::Array<std::complex<float> ,2> b = convert_to_blitz<std::complex<float> ,2>(b_array,"b");
+        blitz::TinyVector<int,2> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_3(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_3",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,3,"a");
+        blitz::Array<std::complex<float> ,3> a = convert_to_blitz<std::complex<float> ,3>(a_array,"a");
+        blitz::TinyVector<int,3> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,3,"b");
+        blitz::Array<std::complex<float> ,3> b = convert_to_blitz<std::complex<float> ,3>(b_array,"b");
+        blitz::TinyVector<int,3> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_4(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_4",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,4,"a");
+        blitz::Array<std::complex<float> ,4> a = convert_to_blitz<std::complex<float> ,4>(a_array,"a");
+        blitz::TinyVector<int,4> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,4,"b");
+        blitz::Array<std::complex<float> ,4> b = convert_to_blitz<std::complex<float> ,4>(b_array,"b");
+        blitz::TinyVector<int,4> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_5(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_5",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,5,"a");
+        blitz::Array<std::complex<float> ,5> a = convert_to_blitz<std::complex<float> ,5>(a_array,"a");
+        blitz::TinyVector<int,5> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,5,"b");
+        blitz::Array<std::complex<float> ,5> b = convert_to_blitz<std::complex<float> ,5>(b_array,"b");
+        blitz::TinyVector<int,5> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_6(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_6",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,6,"a");
+        blitz::Array<std::complex<float> ,6> a = convert_to_blitz<std::complex<float> ,6>(a_array,"a");
+        blitz::TinyVector<int,6> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,6,"b");
+        blitz::Array<std::complex<float> ,6> b = convert_to_blitz<std::complex<float> ,6>(b_array,"b");
+        blitz::TinyVector<int,6> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_7(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_7",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,7,"a");
+        blitz::Array<std::complex<float> ,7> a = convert_to_blitz<std::complex<float> ,7>(a_array,"a");
+        blitz::TinyVector<int,7> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,7,"b");
+        blitz::Array<std::complex<float> ,7> b = convert_to_blitz<std::complex<float> ,7>(b_array,"b");
+        blitz::TinyVector<int,7> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_8(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_8",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,8,"a");
+        blitz::Array<std::complex<float> ,8> a = convert_to_blitz<std::complex<float> ,8>(a_array,"a");
+        blitz::TinyVector<int,8> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,8,"b");
+        blitz::Array<std::complex<float> ,8> b = convert_to_blitz<std::complex<float> ,8>(b_array,"b");
+        blitz::TinyVector<int,8> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_9(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_9",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,9,"a");
+        blitz::Array<std::complex<float> ,9> a = convert_to_blitz<std::complex<float> ,9>(a_array,"a");
+        blitz::TinyVector<int,9> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,9,"b");
+        blitz::Array<std::complex<float> ,9> b = convert_to_blitz<std::complex<float> ,9>(b_array,"b");
+        blitz::TinyVector<int,9> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_10(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_10",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,10,"a");
+        blitz::Array<std::complex<float> ,10> a = convert_to_blitz<std::complex<float> ,10>(a_array,"a");
+        blitz::TinyVector<int,10> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,10,"b");
+        blitz::Array<std::complex<float> ,10> b = convert_to_blitz<std::complex<float> ,10>(b_array,"b");
+        blitz::TinyVector<int,10> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
+static PyObject* _fft_F_11(PyObject*self, PyObject* args, PyObject* kywds)
+{
+    py::object return_val;
+    int exception_occured = 0;
+    PyObject *py_local_dict = NULL;
+    static const char *kwlist[] = {"a","b","adims","fft_sign","shift","inplace","local_dict", NULL};
+    PyObject *py_a, *py_b, *py_adims, *py_fft_sign, *py_shift, *py_inplace;
+    int a_used, b_used, adims_used, fft_sign_used, shift_used, inplace_used;
+    py_a = py_b = py_adims = py_fft_sign = py_shift = py_inplace = NULL;
+    a_used= b_used= adims_used= fft_sign_used= shift_used= inplace_used = 0;
+    
+    if(!PyArg_ParseTupleAndKeywords(args,kywds,"OOOOOO|O:_fft_F_11",const_cast<char**>(kwlist),&py_a, &py_b, &py_adims, &py_fft_sign, &py_shift, &py_inplace, &py_local_dict))
+       return NULL;
+    try                              
+    {                                
+        py_a = py_a;
+        PyArrayObject* a_array = convert_to_numpy(py_a,"a");
+        conversion_numpy_check_type(a_array,PyArray_CFLOAT,"a");
+        conversion_numpy_check_size(a_array,11,"a");
+        blitz::Array<std::complex<float> ,11> a = convert_to_blitz<std::complex<float> ,11>(a_array,"a");
+        blitz::TinyVector<int,11> Na = a.shape();
+        a_used = 1;
+        py_b = py_b;
+        PyArrayObject* b_array = convert_to_numpy(py_b,"b");
+        conversion_numpy_check_type(b_array,PyArray_CFLOAT,"b");
+        conversion_numpy_check_size(b_array,11,"b");
+        blitz::Array<std::complex<float> ,11> b = convert_to_blitz<std::complex<float> ,11>(b_array,"b");
+        blitz::TinyVector<int,11> Nb = b.shape();
+        b_used = 1;
+        py_adims = py_adims;
+        PyArrayObject* adims_array = convert_to_numpy(py_adims,"adims");
+        conversion_numpy_check_type(adims_array,PyArray_INT,"adims");
+        conversion_numpy_check_size(adims_array,1,"adims");
+        blitz::Array<int,1> adims = convert_to_blitz<int,1>(adims_array,"adims");
+        blitz::TinyVector<int,1> Nadims = adims.shape();
+        adims_used = 1;
+        py_fft_sign = py_fft_sign;
+        int fft_sign = convert_to_int(py_fft_sign,"fft_sign");
+        fft_sign_used = 1;
+        py_shift = py_shift;
+        int shift = convert_to_int(py_shift,"shift");
+        shift_used = 1;
+        py_inplace = py_inplace;
+        int inplace = convert_to_int(py_inplace,"inplace");
+        inplace_used = 1;
+        /*<function call here>*/     
+        
+                if(inplace) {
+                  cfloat_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+                } else {
+                  cfloat_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+                }
+        if(py_local_dict)                                  
+        {                                                  
+            py::dict local_dict = py::dict(py_local_dict); 
+        }                                                  
+    
+    }                                
+    catch(...)                       
+    {                                
+        return_val =  py::object();      
+        exception_occured = 1;       
+    }                                
+    /*cleanup code*/                     
+    if(a_used)
+    {
+        Py_XDECREF(py_a);
+    }
+    if(b_used)
+    {
+        Py_XDECREF(py_b);
+    }
+    if(adims_used)
+    {
+        Py_XDECREF(py_adims);
+    }
+    if(!(PyObject*)return_val && !exception_occured)
+    {
+                                  
+        return_val = Py_None;            
+    }
+                                  
+    return return_val.disown();           
+}                                
 
 
 static PyMethodDef compiled_methods[] = 
 {
-    {"_fft_F_1",(PyCFunction)_fft_F_1 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_2",(PyCFunction)_fft_F_2 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_3",(PyCFunction)_fft_F_3 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_4",(PyCFunction)_fft_F_4 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_5",(PyCFunction)_fft_F_5 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_6",(PyCFunction)_fft_F_6 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_7",(PyCFunction)_fft_F_7 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_8",(PyCFunction)_fft_F_8 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_9",(PyCFunction)_fft_F_9 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_10",(PyCFunction)_fft_F_10 , METH_VARARGS|METH_KEYWORDS},
-    {"_fft_F_11",(PyCFunction)_fft_F_11 , METH_VARARGS|METH_KEYWORDS},
     {"_fft_D_1",(PyCFunction)_fft_D_1 , METH_VARARGS|METH_KEYWORDS},
     {"_fft_D_2",(PyCFunction)_fft_D_2 , METH_VARARGS|METH_KEYWORDS},
     {"_fft_D_3",(PyCFunction)_fft_D_3 , METH_VARARGS|METH_KEYWORDS},
@@ -3002,6 +2991,17 @@ static PyMethodDef compiled_methods[] =
     {"_fft_D_9",(PyCFunction)_fft_D_9 , METH_VARARGS|METH_KEYWORDS},
     {"_fft_D_10",(PyCFunction)_fft_D_10 , METH_VARARGS|METH_KEYWORDS},
     {"_fft_D_11",(PyCFunction)_fft_D_11 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_1",(PyCFunction)_fft_F_1 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_2",(PyCFunction)_fft_F_2 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_3",(PyCFunction)_fft_F_3 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_4",(PyCFunction)_fft_F_4 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_5",(PyCFunction)_fft_F_5 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_6",(PyCFunction)_fft_F_6 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_7",(PyCFunction)_fft_F_7 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_8",(PyCFunction)_fft_F_8 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_9",(PyCFunction)_fft_F_9 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_10",(PyCFunction)_fft_F_10 , METH_VARARGS|METH_KEYWORDS},
+    {"_fft_F_11",(PyCFunction)_fft_F_11 , METH_VARARGS|METH_KEYWORDS},
     {NULL,      NULL}        /* Sentinel */
 };
 

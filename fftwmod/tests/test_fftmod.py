@@ -1,8 +1,8 @@
 import numpy as np
 import numpy.testing as npt
 
-from nutmeg.external import decotest
-from nutmeg.fftmod import fft1, ifft1, fft2, ifft2, _fftn, _ifftn
+from decotest import parametric
+from fftwmod import fft1, ifft1, fft2, ifft2, _fftn, _ifftn
 
 def direct_dft(v):
     assert v.dtype.char.isupper()
@@ -107,7 +107,7 @@ def _get_1D_fft(shift, dt):
     c_np = reference_fftn(c2, axes=(0,), shift=shift)
     return c, c_np
     
-@decotest.parametric
+@parametric
 def test_simple_1D_fft_0_F():
     c, c_np = _get_1D_fft(0, 'F')
     # test sum-of-squares equality
@@ -118,7 +118,7 @@ def test_simple_1D_fft_0_F():
     # is a weighted delta at k=32
     yield npt.assert_almost_equal(c[32], 128.0), 'delta function error'
 
-@decotest.parametric
+@parametric
 def test_simple_1D_fft_1_F():
     c, c_np = _get_1D_fft(1, 'F')
     # test sum-of-squares equality
@@ -129,7 +129,7 @@ def test_simple_1D_fft_1_F():
     # is a weighted delta at k=32
     yield npt.assert_almost_equal(c[64+32], 128.0), 'delta function error'
 
-@decotest.parametric
+@parametric
 def test_simple_1D_fft_0_D():
     c, c_np = _get_1D_fft(0, 'D')
     # test sum-of-squares equality
@@ -140,7 +140,7 @@ def test_simple_1D_fft_0_D():
     # is a weighted delta at k=32
     yield npt.assert_almost_equal(c[32], 128.0), 'delta function error'
 
-@decotest.parametric
+@parametric
 def test_simple_1D_fft_1_D():
     c, c_np = _get_1D_fft(1, 'D')
     # test sum-of-squares equality
@@ -159,7 +159,7 @@ def _get_2D_fft(shift, dt):
     c_np = reference_fftn(c2, axes=(0,1), shift=shift)
     return c, c_np
 
-@decotest.parametric
+@parametric
 def test_simple_2D_fft_0_F():
     c, c_np = _get_2D_fft(0, 'F')
     # test sum-of-squares equality
@@ -172,7 +172,7 @@ def test_simple_2D_fft_0_F():
     # is a weighted delta at i=13, j=4
     yield npt.assert_almost_equal(c[13,4], 128.0**2), 'delta function error'
 
-@decotest.parametric
+@parametric
 def test_simple_2D_fft_0_D():
     c, c_np = _get_2D_fft(0, 'D')
     # test sum-of-squares equality
@@ -183,7 +183,7 @@ def test_simple_2D_fft_0_D():
     # is a weighted delta at i=13, j=4
     yield npt.assert_almost_equal(c[13,4], 128.0**2), 'delta function error'
 
-@decotest.parametric
+@parametric
 def test_simple_2D_fft_1_F():
     c, c_np = _get_2D_fft(1, 'F')
     # test sum-of-squares equality
@@ -195,7 +195,7 @@ def test_simple_2D_fft_1_F():
     yield npt.assert_almost_equal(c[64+13,64+4], 128.0**2), \
           'delta function error'
 
-@decotest.parametric
+@parametric
 def test_simple_2D_fft_1_D():
     c, c_np = _get_2D_fft(1, 'D')
     # test sum-of-squares equality
@@ -207,7 +207,7 @@ def test_simple_2D_fft_1_D():
     yield npt.assert_almost_equal(c[64+13,64+4], 128.0**2), \
           'delta function error'
 
-@decotest.parametric
+@parametric
 def test_simple_multi_fft_0_F():
     shift = 0
     dt = 'F'
@@ -223,7 +223,7 @@ def test_simple_multi_fft_0_F():
     yield sum_of_sqr_comp(c, c_np, 'total energy not equal')
     yield sum_of_sqr_comp(ct, ct_np, 'total energy not equal')
 
-@decotest.parametric
+@parametric
 def test_simple_multi_fft_1_F():
     shift = 1
     dt = 'F'
@@ -239,7 +239,7 @@ def test_simple_multi_fft_1_F():
     yield sum_of_sqr_comp(c, c_np, 'total energy not equal')
     yield sum_of_sqr_comp(ct, ct_np, 'total energy not equal')
 
-@decotest.parametric
+@parametric
 def test_simple_multi_fft_0_D():
     shift = 0
     dt = 'D'
@@ -255,7 +255,7 @@ def test_simple_multi_fft_0_D():
     yield sum_of_sqr_comp(c, c_np, 'total energy not equal')
     yield sum_of_sqr_comp(ct, ct_np, 'total energy not equal')
 
-@decotest.parametric
+@parametric
 def test_simple_multi_fft_1_D():
     shift = 1
     dt = 'D'
@@ -272,7 +272,7 @@ def test_simple_multi_fft_1_D():
     yield sum_of_sqr_comp(ct, ct_np, 'total energy not equal')
 
 
-@decotest.parametric
+@parametric
 def test_strided_1d_fft_0_F():
     shift = 0
     dt = 'F'
@@ -292,7 +292,7 @@ def test_strided_1d_fft_0_F():
     yield sum_of_sqr_comp(r1, r1_np, 'axis0 dtype='+dt)
     yield sum_of_sqr_comp(r2, r2_np, 'axis1 dtype='+dt)
 
-@decotest.parametric
+@parametric
 def test_strided_1d_fft_0_D():
     shift = 0
     dt = 'D'
@@ -312,7 +312,7 @@ def test_strided_1d_fft_0_D():
     yield sum_of_sqr_comp(r1, r1_np, 'axis0 dtype='+dt)
     yield sum_of_sqr_comp(r2, r2_np, 'axis1 dtype='+dt)
 
-@decotest.parametric
+@parametric
 def test_strided_1d_fft_1_F():
     shift = 1
     dt = 'F'
@@ -332,7 +332,7 @@ def test_strided_1d_fft_1_F():
     yield sum_of_sqr_comp(r1, r1_np, 'axis0 dtype='+dt)
     yield sum_of_sqr_comp(r2, r2_np, 'axis1 dtype='+dt)
 
-@decotest.parametric
+@parametric
 def test_strided_1d_fft_1_D():
     shift = 1
     dt = 'D'
@@ -353,7 +353,7 @@ def test_strided_1d_fft_1_D():
     yield sum_of_sqr_comp(r2, r2_np, 'axis1 dtype='+dt)
 
 
-@decotest.parametric
+@parametric
 def test_strided_2d_fft_0_F():
     shift = 0
     dt = 'F'
@@ -374,7 +374,7 @@ def test_strided_2d_fft_0_F():
     yield sum_of_sqr_comp(r1, r1_np, 'dtype = '+dt)
     yield sum_of_sqr_comp(r2, r2_np, 'dtype = '+dt)
 
-@decotest.parametric
+@parametric
 def test_strided_2d_fft_0_D():
     shift = 0
     dt = 'D'
@@ -395,7 +395,7 @@ def test_strided_2d_fft_0_D():
     yield sum_of_sqr_comp(r1, r1_np, 'dtype = '+dt)
     yield sum_of_sqr_comp(r2, r2_np, 'dtype = '+dt)
 
-@decotest.parametric
+@parametric
 def test_strided_2d_fft_1_F():
     shift = 1
     dt = 'F'
@@ -416,7 +416,7 @@ def test_strided_2d_fft_1_F():
     yield sum_of_sqr_comp(r1, r1_np, 'dtype = '+dt)
     yield sum_of_sqr_comp(r2, r2_np, 'dtype = '+dt)
 
-@decotest.parametric
+@parametric
 def test_strided_2d_fft_1_D():
     shift = 1
     dt = 'D'
@@ -439,7 +439,7 @@ def test_strided_2d_fft_1_D():
 
 
 
-@decotest.parametric
+@parametric
 def test_roundtrip_inplace_0_F():
     shift = 0
     dt = 'F'
@@ -462,7 +462,7 @@ def test_roundtrip_inplace_0_F():
         )
     yield sum_of_sqr_comp(g_bkp, g)
 
-@decotest.parametric
+@parametric
 def test_roundtrip_inplace_1_F():
     shift = 1
     dt = 'F'
@@ -485,7 +485,7 @@ def test_roundtrip_inplace_1_F():
         )
     yield sum_of_sqr_comp(g_bkp, g)
 
-@decotest.parametric
+@parametric
 def test_roundtrip_inplace_0_D():
     shift = 0
     dt = 'D'
@@ -508,7 +508,7 @@ def test_roundtrip_inplace_0_D():
         )
     yield sum_of_sqr_comp(g_bkp, g)
 
-@decotest.parametric
+@parametric
 def test_roundtrip_inplace_1_D():
     shift = 1
     dt = 'D'

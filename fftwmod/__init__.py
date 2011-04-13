@@ -10,8 +10,6 @@ BOTH your input and output arrays will be arranged on the negative-to-positive
 interval. To take regular FFTs, shifting can be turned off.
 """
 import numpy as np
-from os.path import join, split, abspath
-import os, sys
 #______________________ Some convenience wrappers ___________________________
 
 def fft1(a, shift=True, inplace=False, axis=-1):
@@ -149,7 +147,7 @@ def ifftn(a, shift=True, inplace=False, axes=(-1)):
 #____________________________________________________________________________
 
 try:
-    import fft_ext    
+    import fftw_ext    
     def _fftn(a, axes=(-1,), shift=1, inplace=0, fft_sign=-1):
         # integer-ize these parameters
         inplace = 1 if inplace else 0
