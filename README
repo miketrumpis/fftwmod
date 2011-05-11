@@ -1,0 +1,2 @@
+This module drops to C++ to launch threaded FFTs over a block of numpy ndarrays
+
