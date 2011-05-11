@@ -26,6 +26,7 @@ typedef struct {
   int nft_rank;
   int shift;
   int direction;
+  int normalize;
 } fft_args;
 
 inline int idot(int *v1, int *v2, int N)
@@ -121,8 +122,9 @@ void *thread_fftwf(void *ptr)
   if(args->shift) {
     // if input and output pointers are different, demodulate
     // input separately without scaling on the IFFT
-//     oscl = (args->direction==INVERSE) ? 1.0/len_xform : 1.0;
-    oscl = (args->direction==INVERSE) ? shift_fix/len_xform : shift_fix;
+    oscl = shift_fix;
+    if (args->direction==INVERSE && args->normalize)
+      oscl /= len_xform;
     for(k=0; k<nxforms; k++) {
       indices_int(k, nft_shape, nft_indices, nft_rank);
       if(args->i != args->o) {
@@ -146,7 +148,7 @@ void *thread_fftwf(void *ptr)
       }
 				      
     }
-  } else if(args->direction == INVERSE) {
+  } else if(args->direction == INVERSE && args->normalize) {
     for(k=0; k<nxforms; k++) {
       indices_int(k, nft_shape, nft_indices, nft_rank);
       o_ptr = z_o + idot(nft_indices, onft_strides, nft_rank);
@@ -167,7 +169,8 @@ void *thread_fftwf(void *ptr)
 template <const int N_rank>
 void cfloat_fft(blitz::Array<cfloat,N_rank>& ai, 
 		blitz::Array<cfloat,N_rank>& ao,
-		int fft_rank, int *fft_dims, int direction, int shift)
+		int fft_rank, int *fft_dims, 
+		int direction, int shift, int normalize)
 {
   int n, k;
   for(k=0; k<fft_rank; k++) {
@@ -248,6 +251,7 @@ void cfloat_fft(blitz::Array<cfloat,N_rank>& ai,
     (args+n)->nft_rank = howmany_rank;
     (args+n)->shift = shift;
     (args+n)->direction = direction;
+    (args+n)->normalize = normalize;
 #ifdef THREADED
     pthread_create(&(threads[n]), NULL, thread_fftwf, (void *) (args+n));
 #endif
@@ -327,8 +331,9 @@ void *thread_fftw(void *ptr)
   if(args->shift) {
     // if input and output pointers are different, demodulate
     // input separately without scaling on the IFFT
-//     oscl = (args->direction==INVERSE) ? 1.0/len_xform : 1.0;
-    oscl = (args->direction==INVERSE) ? shift_fix/len_xform : shift_fix;
+    oscl = shift_fix;
+    if (args->direction==INVERSE && args->normalize)
+      oscl /= len_xform;
     for(k=0; k<nxforms; k++) {
       indices_int(k, nft_shape, nft_indices, nft_rank);
       if(args->i != args->o) {
@@ -352,7 +357,7 @@ void *thread_fftw(void *ptr)
       }
 				      
     }
-  } else if(args->direction == INVERSE) {
+  } else if(args->direction == INVERSE && args->normalize) {
     for(k=0; k<nxforms; k++) {
       indices_int(k, nft_shape, nft_indices, nft_rank);
       o_ptr = z_o + idot(nft_indices, onft_strides, nft_rank);
@@ -373,7 +378,9 @@ void *thread_fftw(void *ptr)
 template <const int N_rank>
 void cdouble_fft(blitz::Array<cdouble,N_rank>& ai, 
 		 blitz::Array<cdouble,N_rank>& ao,
-		 int fft_rank, int *fft_dims, int direction, int shift)
+		 int fft_rank, int *fft_dims, 
+		 int direction, int shift,
+		 int normalize)
 {
   int n, k;
   for(k=0; k<fft_rank; k++) {
@@ -453,6 +460,7 @@ void cdouble_fft(blitz::Array<cdouble,N_rank>& ai,
     (args+n)->nft_rank = howmany_rank;
     (args+n)->shift = shift;
     (args+n)->direction = direction;
+    (args+n)->normalize = normalize;
 #ifdef THREADED
     pthread_create(&(threads[n]), NULL, thread_fftw, (void *) (args+n));
 #endif

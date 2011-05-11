@@ -34,7 +34,7 @@ def fft1(a, shift=True, inplace=False, axis=-1):
     """
     return _fftn(a, axes=(axis,), shift=shift, inplace=inplace)
 
-def ifft1(a, shift=True, inplace=False, axis=-1):
+def ifft1(a, shift=True, inplace=False, normalize=True, axis=-1):
     """
     Perform an inverse FFT on a given axis
 
@@ -55,7 +55,8 @@ def ifft1(a, shift=True, inplace=False, axis=-1):
     Transformed array if inplace==False
     """
 
-    return _ifftn(a, axes=(axis,), shift=shift, inplace=inplace)
+    return _ifftn(a, axes=(axis,), shift=shift,
+                  inplace=inplace, normalize=normalize)
 
 def fft2(a, shift=True, inplace=False, axes=(-2,-1)):
     """
@@ -79,7 +80,7 @@ def fft2(a, shift=True, inplace=False, axes=(-2,-1)):
     """
     return _fftn(a, axes=axes, shift=shift, inplace=inplace)    
 
-def ifft2(a, shift=True, inplace=False, axes=(-2,-1)):
+def ifft2(a, shift=True, inplace=False, normalize=True, axes=(-2,-1)):
     """
     Perform an inverse FFT on two given axes
 
@@ -99,7 +100,8 @@ def ifft2(a, shift=True, inplace=False, axes=(-2,-1)):
     -------
     Transformed array if inplace==False
     """
-    return _ifftn(a, axes=axes, shift=shift, inplace=inplace)
+    return _ifftn(a, axes=axes, shift=shift,
+                  inplace=inplace, normalize=normalize)
 
 def fftn(a, shift=True, inplace=False, axes=(-1)):
     """
@@ -123,7 +125,7 @@ def fftn(a, shift=True, inplace=False, axes=(-1)):
     """
     return _fftn(a, axes=axes, shift=shift, inplace=inplace)
 
-def ifftn(a, shift=True, inplace=False, axes=(-1)):
+def ifftn(a, shift=True, inplace=False, normalize=True, axes=(-1)):
     """
     Perform an inverse FFT on any given axes
 
@@ -143,19 +145,20 @@ def ifftn(a, shift=True, inplace=False, axes=(-1)):
     -------
     Transformed array if inplace==False
     """
-    return _ifftn(a, axes=axes, shift=shift, inplace=inplace)
+    return _ifftn(a, axes=axes, shift=shift,
+                  inplace=inplace, normalize=normalize)
 #____________________________________________________________________________
 
 try:
     import fftw_ext    
-    def _fftn(a, axes=(-1,), shift=1, inplace=0, fft_sign=-1):
+    def _fftn(a, axes=(-1,), shift=1, inplace=0, fft_sign=-1, normalize=1):
         # integer-ize these parameters
-        inplace = 1 if inplace else 0
+        shift, inplace, normalize = map(int, (shift, inplace, normalize))
 
         rank = len(a.shape)
         fname = '_fft_%s_%d'%(a.dtype.char, rank)
         try:
-            ft_func = getattr(fft_ext, fname)
+            ft_func = getattr(fftw_ext, fname)
         except AttributeError:
             raise ValueError('no transform for this type and rank: %s, %d'%(a.dtype.char, rank))
 
@@ -182,7 +185,7 @@ try:
             shift = 0
 
         adims = np.array(axes, dtype='i')
-        ft_func(a, b, adims, fft_sign, shift, inplace)
+        ft_func(a, b, adims, fft_sign, shift, inplace, normalize)
 
         if do_fftshift:
             arr = a if inplace else b
@@ -194,7 +197,7 @@ try:
             return b
 
 except ImportError:
-    def _fftn(a, axes=(-1,), shift=1, inplace=0, fft_sign=-1):
+    def _fftn(a, axes=(-1,), shift=1, inplace=0, fft_sign=-1, normalize=1):
         fft_func = np.fft.fftn if fft_sign<0 else np.fft.ifftn
         op_arr = a if inplace else a.copy()
         if shift:
@@ -206,6 +209,11 @@ except ImportError:
         #else:
         #    b = a.copy()
         b = fft_func(op_arr, axes=axes)
+        if fft_sign < 0 and not normalize:
+            dt = op_arr.dtype.type
+            scale = np.prod( [op_arr.shape[d] for d in axes] )
+            scale = dt(scale)
+            b *= scale
         del op_arr
         if shift:
             for n, d in enumerate(a.shape):

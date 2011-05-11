@@ -20,12 +20,13 @@ if fftw_info and sys.platform != 'win32':
         from scipy.weave import ext_tools
         from scipy.weave.converters import blitz as blitz_conv
 
-        # call_code needs python args ['a','b','adims','fft_sign','shift','inplace']
+        # call_code needs python args
+        # ['a','b','adims','fft_sign','shift','inplace', 'normalize']
         call_code = """
         if(inplace) {
-          SCL_TYPE_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift);
+          SCL_TYPE_fft(a, a, adims.shape()[0], adims.data(), fft_sign, shift, normalize);
         } else {
-          SCL_TYPE_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift);
+          SCL_TYPE_fft(a, b, adims.shape()[0], adims.data(), fft_sign, shift, normalize);
         }
         """
 
@@ -49,6 +50,7 @@ if fftw_info and sys.platform != 'win32':
         fft_sign = -1
         shift = 1
         inplace = 0
+        normalize = 0
         for scl_type in scl_types:
             for rank in blitz_ranks:
                 shape = (1,) * rank
@@ -59,12 +61,15 @@ if fftw_info and sys.platform != 'win32':
                 fcode = call_code.replace('SCL_TYPE', c_scl_type)
                 fname = '_fft_%s_%d'%(scl_type.char, rank)
 
-                ext_funcs.append(ext_tools.ext_function(fname, fcode,
-                                                        ['a', 'b', 'adims',
-                                                         'fft_sign', 'shift',
-                                                         'inplace'],
-                                                        type_converters=blitz_conv))
-        mod = ext_tools.ext_module('fft_ext')
+                ext_funcs.append(
+                    ext_tools.ext_function(
+                        fname, fcode,
+                        ['a', 'b', 'adims', 'fft_sign',
+                         'shift', 'inplace', 'normalize'],
+                        type_converters=blitz_conv
+                        )
+                    )
+        mod = ext_tools.ext_module('fftw_ext')
         for func in ext_funcs:
             mod.add_function(func)
         mod.customize.add_support_code(fft_code)
@@ -80,7 +85,7 @@ if fftw_info and sys.platform != 'win32':
         else:
             # this also generates the cpp file
             ext = mod.setup_extension(location=loc, **kw)
-            ext.name = 'fftwmod.fft_ext'
+            ext.name = 'fftwmod.fftw_ext'
             return ext
 
 def configuration(parent_package='', top_path=None):
@@ -91,8 +96,8 @@ def configuration(parent_package='', top_path=None):
     config.add_data_dir('benchmarks')
 
     if 'export_extension' in globals():
-        fft_ext = export_extension(build=False)
-        config.ext_modules.append(fft_ext)
+        fftw_ext = export_extension(build=False)
+        config.ext_modules.append(fftw_ext)
 
     return config
 
