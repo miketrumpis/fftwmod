@@ -1,2 +1,15 @@
-This module drops to C++ to launch threaded FFTs over a block of numpy ndarrays
+This module drops to C++ to launch threaded FFTs over a block of numpy ndarrays.
+
+In particular, the transforms are defined over an ND grid ranging in each
+dimension from [-N,N-1]. Of course this support can be toggled to regular
+FFT support.
+
+From the notes..
+
+This module provides N-D FFTs for functions taken on the interval
+n = [-N/2, ..., N/2-1] in all transformed directions. This is accomplished
+quickly by making a change of variables in the DFT expression, leading to
+multiplication of exp(+/-jPIk) * DFT{exp(+/-jPIn) * [n]}. Take notice that
+BOTH your input and output arrays will be arranged on the negative-to-positive
+interval. To take regular FFTs, shifting can be turned off.
 
