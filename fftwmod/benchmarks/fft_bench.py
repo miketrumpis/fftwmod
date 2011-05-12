@@ -1,10 +1,25 @@
 from numpy.testing import *
-from recon.fftmod import fft1, ifft1, fft2, ifft2
-from recon.util import checkerline, checkerboard
+from fftwmod import fft1, ifft1, fft2, ifft2
 import numpy as np
 from numpy import double, single, cdouble, csingle
 from numpy.random import rand as random
 import sys, time
+
+def checkerline(cols):
+    "Returns a 1D array of (-1)^n"
+    return np.ones(cols) - 2*(np.arange(cols)%2)
+
+def checkerboard(rows, cols):
+    "Returns a 2D array of (-1)^(n+m)"
+    return np.outer(checkerline(rows), checkerline(cols))
+
+def checkercube(slices, rows, cols):
+    "Returns a 3D array of (-1)^(n+m+r)"
+    p = np.zeros((slices, rows, cols))
+    q = checkerboard(rows, cols)
+    for z in range(slices):
+        p[z] = (1 - 2*(z%2))*q
+    return p
 
 class TestFFT1(TestCase):    
     def bench_fft1_time(self):
