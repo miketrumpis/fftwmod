@@ -2,7 +2,8 @@ import numpy as np
 import numpy.testing as npt
 
 from decotest import parametric
-from fftwmod import fft1, ifft1, fft2, ifft2, _fftn, _ifftn
+from fftwmod import fft1, ifft1, fft2, ifft2
+from fftwmod.wraps import _fftn, _ifftn
 
 def direct_dft(v):
     assert v.dtype.char.isupper()
