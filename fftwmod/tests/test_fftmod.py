@@ -1,5 +1,6 @@
 import numpy as np
 import numpy.testing as npt
+from nose.tools import assert_true, assert_false
 
 from decotest import parametric
 from fftwmod import fft1, ifft1, fft2, ifft2
@@ -107,7 +108,36 @@ def _get_1D_fft(shift, dt):
     _fftn(c, axes=(0,), shift=shift, inplace=True)
     c_np = reference_fftn(c2, axes=(0,), shift=shift)
     return c, c_np
-    
+
+@parametric
+def test_unnormalized_1F():
+    x = np.random.randn(128) + 1j*np.random.randn(128)
+    x = x.astype('F')
+    z = _fftn(x, axes=(0,), shift=0, inplace=False)
+    x2 = _ifftn(z, axes=(0,), shift=0, inplace=False, normalize=False)
+    yield npt.assert_almost_equal(
+        np.linalg.norm(x2), np.linalg.norm(x)*len(x)
+        )
+    z = _fftn(x, axes=(0,), shift=1, inplace=False, normalize=False)
+    x2 = _ifftn(z, axes=(0,), shift=1, inplace=False, normalize=False)
+    yield npt.assert_almost_equal(
+        np.linalg.norm(x2), np.linalg.norm(x)*len(x)
+        )
+
+@parametric
+def test_unnormalized_1D():
+    x = np.random.randn(128) + 1j*np.random.randn(128)
+    z = _fftn(x, axes=(0,), shift=0, inplace=False)
+    x2 = _ifftn(z, axes=(0,), shift=0, inplace=False, normalize=False)
+    yield npt.assert_almost_equal(
+        np.linalg.norm(x2), np.linalg.norm(x)*len(x)
+        )
+    z = _fftn(x, axes=(0,), shift=1, inplace=False, normalize=False)
+    x2 = _ifftn(z, axes=(0,), shift=1, inplace=False, normalize=False)
+    yield npt.assert_almost_equal(
+        np.linalg.norm(x2), np.linalg.norm(x)*len(x)
+        )
+
 @parametric
 def test_simple_1D_fft_0_F():
     c, c_np = _get_1D_fft(0, 'F')
