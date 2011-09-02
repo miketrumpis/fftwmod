@@ -64,7 +64,7 @@ void *thread_fftwf(void *ptr)
   fft_args *args = (fft_args *) ptr;
   fftwf_plan *FT = (fftwf_plan *) args->p;
   fftwf_complex *z_i, *z_o, *o_ptr, *i_ptr;
-  float oscl, mod, shift_fix, len_xform = 1.0;
+  float oscl, mod, m_out_base, len_xform = 1.0;
   int k, l, offsets, nxforms = 1;
   int ft_rank = args->ft_rank, nft_rank = args->nft_rank;
   int *ft_shape, *ft_strides, *ft_indices, *oft_strides;
@@ -95,13 +95,11 @@ void *thread_fftwf(void *ptr)
   z_i = reinterpret_cast<fftwf_complex*>( args->i );
   z_o = reinterpret_cast<fftwf_complex*>( args->o );
 
-  // If shift is true, then len(dim_i)/2 is treated as x_i = 0,
-  // and each axis grid is x_i(n) = n - len(dim_i)/2 = n + i0.
-  // Therefore the term (-1)**(x_i+x_j+x_k+...) can be computed
-  // as (-1)**(i+j+k+...) * (-1)**(i0+j0+k0+...)
+  // The output modulation requires as extra term that is computed as
+  // (-1)^(0.5 * sum{ft_shape[k]})
   offsets = 0;
-  for(k=0; k<ft_rank; k++) offsets += ft_shape[k]/2;
-  shift_fix = offsets % 2 ? -1.0 : 1.0;
+  for(k=0; k<ft_rank; k++) offsets += ft_shape[k];
+  m_out_base = (offsets/2) % 2 ? -1.0 : 1.0;
 
   if(args->shift) {
     for(k=0; k<nxforms; k++) {
@@ -109,8 +107,8 @@ void *thread_fftwf(void *ptr)
       o_ptr = z_i + idot(nft_indices, nft_strides, nft_rank);
       for(l=0; l<(int)len_xform; l++) {
   	indices_int(l, ft_shape, ft_indices, ft_rank);
-// 	mod = isum(ft_indices, ft_rank)%2 ? -1.0 : 1.0;
-	mod = isum(ft_indices, ft_rank)%2 ? -shift_fix : shift_fix;
+ 	mod = isum(ft_indices, ft_rank)%2 ? -1.0 : 1.0;
+// 	mod = isum(ft_indices, ft_rank)%2 ? -m_out_base : m_out_base;
   	i_ptr = o_ptr + idot(ft_indices, ft_strides, ft_rank);
  	(*i_ptr)[0] *= mod;
  	(*i_ptr)[1] *= mod;
@@ -120,19 +118,19 @@ void *thread_fftwf(void *ptr)
   fftwf_execute_dft(*FT, z_i, z_o);
 
   if(args->shift) {
-    // if input and output pointers are different, demodulate
-    // input separately without scaling on the IFFT
-    oscl = shift_fix;
+    oscl = m_out_base;
     if (args->direction==INVERSE && args->normalize)
       oscl /= len_xform;
     for(k=0; k<nxforms; k++) {
       indices_int(k, nft_shape, nft_indices, nft_rank);
       if(args->i != args->o) {
   	o_ptr = z_i + idot(nft_indices, nft_strides, nft_rank);
+	// if input and output pointers are different, demodulate
+	// input separately without scaling on the IFFT
 	for(l=0; l<(int)len_xform; l++) {
   	  indices_int(l, ft_shape, ft_indices, ft_rank);
-// 	  mod = isum(ft_indices, ft_rank)%2 ? -1.0 : 1.0;
-	  mod = isum(ft_indices, ft_rank)%2 ? -shift_fix : shift_fix;
+ 	  mod = isum(ft_indices, ft_rank)%2 ? -1.0 : 1.0;
+// 	  mod = isum(ft_indices, ft_rank)%2 ? -m_out_base : m_out_base;
   	  i_ptr = o_ptr + idot(ft_indices, ft_strides, ft_rank);
 	  (*i_ptr)[0] *= mod;
 	  (*i_ptr)[1] *= mod;
@@ -273,7 +271,7 @@ void *thread_fftw(void *ptr)
   fft_args *args = (fft_args *) ptr;
   fftw_plan *FT = (fftw_plan *) args->p;
   fftw_complex *z_i, *z_o, *o_ptr, *i_ptr;
-  double oscl, mod, shift_fix, len_xform = 1.0;
+  double oscl, mod, m_out_base, len_xform = 1.0;
   int k, l, offsets, nxforms = 1;
   int ft_rank = args->ft_rank, nft_rank = args->nft_rank;
   int *ft_shape, *ft_strides, *ft_indices, *oft_strides;
@@ -304,13 +302,11 @@ void *thread_fftw(void *ptr)
   z_i = reinterpret_cast<fftw_complex*>( args->i );
   z_o = reinterpret_cast<fftw_complex*>( args->o );
 
-  // If shift is true, then len(dim_i)/2 is treated as x_i = 0,
-  // and each axis grid is x_i(n) = n - len(dim_i)/2 = n + i0.
-  // Therefore the term (-1)**(x_i+x_j+x_k+...) can be computed
-  // as (-1)**(i+j+k+...) * (-1)**(i0+j0+k0+...)
+  // The output modulation requires as extra term that is computed as
+  // (-1)^(0.5 * sum{ft_shape[k]})
   offsets = 0;
-  for(k=0; k<ft_rank; k++) offsets += ft_shape[k]/2;
-  shift_fix = offsets % 2 ? -1.0 : 1.0;
+  for(k=0; k<ft_rank; k++) offsets += ft_shape[k];
+  m_out_base = (offsets/2) % 2 ? -1.0 : 1.0;
 
   if(args->shift) {
     for(k=0; k<nxforms; k++) {
@@ -318,8 +314,8 @@ void *thread_fftw(void *ptr)
       o_ptr = z_i + idot(nft_indices, nft_strides, nft_rank);
       for(l=0; l<(int)len_xform; l++) {
   	indices_int(l, ft_shape, ft_indices, ft_rank);
-// 	mod = isum(ft_indices, ft_rank)%2 ? -1.0 : 1.0;
-	mod = isum(ft_indices, ft_rank)%2 ? -shift_fix : shift_fix;
+ 	mod = isum(ft_indices, ft_rank)%2 ? -1.0 : 1.0;
+// 	mod = isum(ft_indices, ft_rank)%2 ? -m_out_base : m_out_base;
   	i_ptr = o_ptr + idot(ft_indices, ft_strides, ft_rank);
  	(*i_ptr)[0] *= mod;
  	(*i_ptr)[1] *= mod;
@@ -329,19 +325,19 @@ void *thread_fftw(void *ptr)
   fftw_execute_dft(*FT, z_i, z_o);
 
   if(args->shift) {
-    // if input and output pointers are different, demodulate
-    // input separately without scaling on the IFFT
-    oscl = shift_fix;
+    oscl = m_out_base;
     if (args->direction==INVERSE && args->normalize)
       oscl /= len_xform;
     for(k=0; k<nxforms; k++) {
       indices_int(k, nft_shape, nft_indices, nft_rank);
+      // if input and output pointers are different, demodulate
+      // input separately without scaling on the IFFT
       if(args->i != args->o) {
   	o_ptr = z_i + idot(nft_indices, nft_strides, nft_rank);
 	for(l=0; l<(int)len_xform; l++) {
   	  indices_int(l, ft_shape, ft_indices, ft_rank);
-// 	  mod = isum(ft_indices, ft_rank)%2 ? -1.0 : 1.0;
-	  mod = isum(ft_indices, ft_rank)%2 ? -shift_fix : shift_fix;
+ 	  mod = isum(ft_indices, ft_rank)%2 ? -1.0 : 1.0;
+// 	  mod = isum(ft_indices, ft_rank)%2 ? -m_out_base : m_out_base;
   	  i_ptr = o_ptr + idot(ft_indices, ft_strides, ft_rank);
 	  (*i_ptr)[0] *= mod;
 	  (*i_ptr)[1] *= mod;

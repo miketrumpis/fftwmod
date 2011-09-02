@@ -1,6 +1,6 @@
 import numpy as np
 import numpy.testing as npt
-from nose.tools import assert_true, assert_false
+from nose.tools import assert_true, assert_false, raises
 
 from decotest import parametric
 from fftwmod import fft1, ifft1, fft2, ifft2
@@ -562,174 +562,36 @@ def test_roundtrip_inplace_1_D():
         )
     yield sum_of_sqr_comp(g_bkp, g)
 
+@raises(ValueError)
+def test_fails_for_odd_1():
+    a = np.empty((3,4,5)).astype('D')
+    fft1(a)
 
+@raises(ValueError)
+def test_fails_for_odd_1():
+    a = np.empty((3,4,5)).astype('D')
+    fft2(a, axes=(0,1))
 
-
-
-## class TestFFT(np.testing.TestCase):
-##     def setUp(self):
-##         self.dt = np.dtype('F')
-##         centered_sgrid = np.linspace(0, 1, num=128, endpoint=False) - 0.5
-##         sgrid = np.linspace(0, 1, num=128, endpoint=False)
-##         # a 32Hz complex exponential (sampling rate = 128Hz)
-##         self.ref_1D_32hz = np.exp(2j*np.pi*32*self.sgrid)
-##         # a separable complex exponential with fy = 13Hz, fx = 4Hz
-##         self.ref_2D_grating = np.exp( (2j*np.pi*13*self.sgrid)[:,None] + \
-##                                       (2j*np.pi*4*self.sgrid)[None,:] )
-        
-##         self.rand_3d = (np.random.randn(40, 50, 60) + \
-##                         1j*np.random.randn(40, 50, 60))
-##         self.comp = np.testing.assert_almost_equal
-
-##     def nrg_comp(self, a, b, err_msg=''):
-##         e = a.flat[:]-b.flat[:]
-##         self.comp(np.dot(e,e.conj()).real, 0, err_msg=err_msg)
-        
-##     @run_toggled_kwargs
-##     def test_simple_1D_fft(self, **kwargs):
-##         shift = kwargs.get('shift', 0)
-##         c = self.ref_1D_32hz.astype(self.dt)
-##         c2 = self.ref_1D_32hz.astype(self.dt)
-##         _fftn(c, axes=(0,), shift=shift, inplace=True)
-##         c_np = reference_fftn(c2, axes=(0,), shift=shift)
-##         self.comp(np.dot(c,c.conj()).real,
-##                   np.dot(c_np, c_np.conj()).real)
-##         self.nrg_comp(c, c_np)
-##         # analytically, the DFT indexed from 0,127 of s
-##         # is a weighted delta at k=32
-##         C_a = np.zeros_like(c)
-##         C_a[32 + shift*64] = 128.
-##         self.comp(c, C_a, err_msg='dtype = %s'%self.dt.char)
-##         self.nrg_comp(c, C_a)        
-
-##     @run_toggled_kwargs
-##     def test_simple_2D_fft(self, **kwargs):
-##         shift = kwargs.get('shift', 0)
-##         c = self.ref_2D_grating.astype(self.dt)
-##         c2 = self.ref_2D_grating.astype(self.dt)
-##         _fftn(c, axes=(0,1), shift=shift, inplace=True)
-##         c_np = reference_fftn(c2, axes=(0,1), shift=shift)
-##         self.comp(np.dot(c.flat[:],c.flat[:].conj()).real,
-##                   np.dot(c_np.flat[:], c_np.flat[:].conj()).real)
-##         self.nrg_comp(c, c_np)
-##         # analytically, the DFT indexed from 0,127 of s
-##         # is a weighted delta at i=13, j=4
-##         C_a = np.zeros_like(c)
-##         C_a[13 + shift*64, 4 + shift*64] = 128**2
-##         self.comp(c, C_a, err_msg='dtype = %s'%self.dt.char)
-##         self.nrg_comp(c, C_a)
+def test_passes_for_even():
+    a = np.empty((3,4,5)).astype('D')
+    try:
+        fft1(a, axis=1)
+        assert True, 'passed'
+    except:
+        assert False, 'did not attempt to transform even dimension'
     
-##     @run_toggled_kwargs
-##     def test_simple_multi_fft(self, **kwargs):
-##         shift = kwargs.get('shift', 0)        
-##         c = np.outer(np.ones(64), self.ref_1D_32hz).astype(self.dt)
-##         c2 = np.outer(np.ones(64), self.ref_1D_32hz).astype(self.dt)
-##         ct = c.copy().T
-##         ct2 = c.copy().T
-##         _fftn(c, axes=(-1,), inplace=True, shift=shift)
-##         _fftn(ct, axes=(0,), inplace=True, shift=shift)
-##         c_np = reference_fftn(c2, axes=(-1,), shift=shift)
-##         ct_np = reference_fftn(ct2, axes=(0,), shift=shift)
-##         self.nrg_comp(c, c_np, err_msg='dtype = %s'%self.dt.char)
-##         self.nrg_comp(ct, ct_np, err_msg='transpose dtype=%s'%self.dt.char)
-        
-##     @run_toggled_kwargs        
-##     def test_strided_1d_fft(self, **kwargs):
-##         shift = kwargs.get('shift', 0)        
-##         r1 = self.rand_3d.copy().transpose(0,2,1).astype(self.dt)
-##         r1_2 = self.rand_3d.copy().transpose(0,2,1).astype(self.dt)
-##         r2 = self.rand_3d.copy().transpose(1,0,2).astype(self.dt)
-##         r2_2 = self.rand_3d.copy().transpose(1,0,2).astype(self.dt)        
+def test_twice_odd_length():
+    # functions with dimension lengths such that N_i/2 is odd need
+    # special treatment in the output modulation
+    a = np.random.randn(30).astype('D')
+    A_ref = reference_fftn(a, shift=True)
+    A_test = fft1(a, shift=True)
+    assert np.allclose(A_ref, A_test), 'twice-odd length FT fails'
 
-##         _fftn(r1, axes=(0,), inplace=True, shift=shift)
-##         _fftn(r2, axes=(1,), inplace=True, shift=shift)
-##         r1_np = reference_fftn(r1_2, axes=(0,), shift=shift)
-##         r2_np = reference_fftn(r2_2, axes=(1,), shift=shift)
-
-##         self.nrg_comp(r1, r1_np,
-##                       err_msg='axis0 dtype = %s'%self.dt.char)
-## ##         self.comp( (r1*r1.conj()).real.sum(),
-## ##                    (r1_np*r1_np.conj()).real.sum(),
-## ##                    err_msg='axis0 dtype = %s'%self.dt.char)
-##         self.nrg_comp(r2, r2_np,
-##                       err_msg='axis1 dtype = %s'%self.dt.char)
-## ##         self.comp( (r2*r2.conj()).real.sum(),
-## ##                    (r2_np*r2_np.conj()).real.sum(),
-## ##                    err_msg='axis1 dtype = %s'%self.dt.char)
-
-##     @run_toggled_kwargs
-##     def test_strided_2d_fft(self, **kwargs):
-##         shift = kwargs.get('shift', 0)
-##         r1 = self.rand_3d.copy().transpose(0,2,1).astype(self.dt)
-##         r2 = self.rand_3d.copy().transpose(1,0,2).astype(self.dt)
-##         r1_2 = self.rand_3d.copy().transpose(0,2,1).astype(self.dt)
-##         r2_2 = self.rand_3d.copy().transpose(1,0,2).astype(self.dt)
-
-##         _fftn(r1, axes=(0,2), inplace=True, shift=shift)
-##         _fftn(r2, axes=(1,2), inplace=True, shift=shift)
-##         r1_np = reference_fftn(r1_2, axes=(0,2), shift=shift)
-##         r2_np = reference_fftn(r2_2, axes=(1,2), shift=shift)
-
-## ##         self.comp( (r1*r1.conj()).real.sum(),
-## ##                    (r1_np*r1_np.conj()).real.sum(),
-## ##                    err_msg='dtype = %s'%self.dt.char )
-##         self.nrg_comp(r1, r1_np,
-##                       err_msg='dtype = %s'%self.dt.char )
-## ##         self.comp( (r2*r2.conj()).real.sum(),
-## ##                    (r2_np*r2_np.conj()).real.sum(),
-## ##                    err_msg='dtype = %s'%self.dt.char )
-##         err = r2.flat[:] - r2_np.flat[:]
-##         self.nrg_comp(r2, r2_np,
-##                       err_msg='dtype = %s'%self.dt.char )
-
-##     @run_toggled_kwargs
-##     def test_roundtrip_outofplace(self, **kwargs):
-##         shift = kwargs.get('shift', 0)
-
-##         grid = np.arange(128)
-##         mu = 43.
-##         stdv = 3.
-##         g = (np.exp(-(grid-mu)**2 / (2*stdv**2)) / (2*np.pi*stdv**2)).astype(self.dt)
-##         g2 = g.copy()
-##         g_bkp = g.copy()
-## ##         gw = np.empty_like(g)
-## ##         grt = np.empty_like(g)
-
-##         gw = _fftn(g, inplace=False, shift=shift)
-##         gw_np = reference_fftn(g2, axes=(0,), shift=shift)
-##         grt = _ifftn(gw, inplace=False, shift=shift)
-##         grt_np = reference_ifftn(gw, axes=(0,), shift=shift)
-
-
-##         # strong assertion that g is not altered at all
-##         assert (g==g_bkp).all(), 'out of place xform error, shift=%d'%shift
-##         self.comp(gw, gw_np,
-##                   err_msg='differs from numpy fft ref, shift=%d'%shift)
-##         self.nrg_comp(gw, gw_np)
-##         self.comp(g, grt,
-##                   err_msg='roundtrip transforms diverge, shift=%d'%shift)
-##         self.nrg_comp(g, grt)        
-
-##     @run_toggled_kwargs
-##     def test_roundtrip_inplace(self, **kwargs):
-##         shift = kwargs.get('shift', 0)
-##         grid = np.arange(128)
-##         mu = 43.
-##         stdv = 3.
-##         g = (np.exp(-(grid-mu)**2 / (2*stdv**2)) / (2*np.pi*stdv**2)).astype(self.dt)
-##         g2 = g.copy()
-##         g_bkp = g.copy()
-##         _fftn(g, inplace=True, shift=shift)
-##         gw_np = reference_fftn(g2, shift=shift, axes=(0,))
-        
-##         self.comp(g, gw_np,
-##                   err_msg='differs from numpy fft ref, shift=%d'%shift)
-##         self.nrg_comp(g, gw_np)
-##         _ifftn(g, inplace=True, shift=shift)
-##         self.comp(g_bkp, g,
-##                   err_msg='roundtrip transforms diverge, shift=%d'%shift)
-##         self.nrg_comp(g_bkp, g)        
-
-        
-        
-    
+def test_twice_odd_length2():
+    # functions with dimension lengths such that N_i/2 is odd need
+    # special treatment in the output modulation
+    a = np.random.randn(30,40).astype('D')
+    A_ref = reference_fftn(a, axes=(0,1), shift=True)
+    A_test = fft2(a, shift=True)
+    assert np.allclose(A_ref, A_test), 'twice-odd length FT fails in 2D'

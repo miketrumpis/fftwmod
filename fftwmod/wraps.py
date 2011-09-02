@@ -17,6 +17,14 @@ import numpy as np
 try:
     import fftw_ext
     def _fftn(a, axes=(-1,), shift=1, inplace=0, fft_sign=-1, normalize=1):
+        ft_sizes = (a.shape[ax] for ax in axes)
+        # for now, the underlying C++ only performs elementary sign-toggling
+        # in order to compute the shifted FFT--this is only possible with
+        # even length transforms
+        if shift and any( filter(lambda x: x%2, ft_sizes) ):
+            raise ValueError(
+                'shifted FFTs only operate on even length dimensions'
+                )
         # integer-ize these parameters
         shift, inplace, normalize = map(int, (shift, inplace, normalize))
 
