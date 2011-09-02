@@ -1,0 +1,432 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass amsart
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+fftwmod for Centered FFTs
+\end_layout
+
+\begin_layout Author
+M Trumpis
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+fftwmod
+\emph default
+ Python package provides an efficient mechanism for computing DFTs of multidimen
+sional functions with support on centered grids.
+\end_layout
+
+\begin_layout Section
+Computation of Centered FFTs
+\end_layout
+
+\begin_layout Standard
+Frequently in applications such as image processing, a function is supported
+ on a grid whose origin is centered with respect to the grid.
+ For example, the 6x6 matrix below is filled with its centered indices
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{array}{cccc}
+(-3,-3) & (-3,-2) & \cdots & (-3,2)\\
+(-2,-3) & (-2,-2) & \cdots & (-2,2)\\
+\vdots & \ddots & (0,0) & \vdots\\
+(2,-3) & (2,-2) & \cdots & (2,2)
+\end{array}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The convenient DFT for such a function, in 1D, is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+X(k) & = & \sum_{-M}^{M-1}x(m)e^{-i2\pi mk/2M} & -M\leq k\leq M-1 & (\text{even length)}\label{eq:cdft}\\
+X(k) & = & \sum_{-M}^{M}x(m)e^{-i2\pi mk/(2M+1)} & -M\leq k\leq M & \text{odd length}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the output of this operation is also a function supported on a
+ centered grid.
+\end_layout
+
+\begin_layout Standard
+However, the conventional FFT algorithm calculates
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{gather}
+X(p)=\sum_{n=0}^{N-1}x(n)W_{N}^{-np}\quad0\leq p\leq N-1\label{eq:fft}
+\end{gather}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $W_{N}^{x}=e^{i2\pi x/N}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This calculation presents two deviations from the centered DFT.
+ < ...
+ >
+\end_layout
+
+\begin_layout Standard
+A memory-shifting operation (eg, 
+\begin_inset Formula $\operatorname{fftshift}$
+\end_inset
+
+) is typically employed in order to (
+\emph on
+i
+\emph default
+) cyclically shift the input sequence so that 
+\begin_inset Formula $x(0)$
+\end_inset
+
+ is the first element of the array, and (
+\emph on
+ii
+\emph default
+)
+\emph on
+ 
+\emph default
+arrange the DFT coefficients in centered order.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\tilde{X}_{k}=(X_{N_{q}+1},\, X_{N_{q}+2},\,\dots,\, X_{N-1},\, X_{0},\, X_{1},\,\dots,\, X_{N_{q}})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+with 
+\begin_inset Formula $N_{q}\triangleq(N-1)/2$
+\end_inset
+
+ (check)
+\end_layout
+
+\begin_layout Standard
+Alternatively, the two deviations can be reconciled through a couple of
+ inplace 
+\begin_inset Formula $O(N)$
+\end_inset
+
+ operations.
+ 
+\end_layout
+
+\begin_layout Standard
+The index of summation can be reconciled through a change of variable.
+ In 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:cdft"
+
+\end_inset
+
+, let 
+\begin_inset Formula $n=m+M$
+\end_inset
+
+, and 
+\begin_inset Formula $N$
+\end_inset
+
+ be the total dimension length, as in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fft"
+
+\end_inset
+
+.
+ Then the formal relationship to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fft"
+
+\end_inset
+
+ is established
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+X(p) & = & \sum_{n=0}^{N-1}x(n-M)W_{N}^{-(n-M)p}\label{eq:cov1}\\
+ & = & W_{N}^{pM}\sum_{n=0}^{N-1}x(n-M)W_{N}^{-np}\nonumber \\
+ & = & W_{N}^{pM}\operatorname{FFT}\{x(n-M)\}\nonumber 
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly, the ordering of the DFT coefficients on the output can be manipulated
+ through another change of variables.
+ Letting 
+\begin_inset Formula $k=p+M$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:cov1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+X(k) & = & W_{N}^{(k-M)M}\sum_{n=0}^{N}x(n-M)W_{N}^{-n(k-M)}\\
+ & = & W_{N}^{kM}W_{N}^{-M^{2}}\sum_{n=0}^{N}x(n-M)W_{N}^{nM}W_{N}^{-nk}\\
+ & = & W_{N}^{kM}W_{N}^{-M^{2}}\operatorname{FFT}\{x(n-M)W_{N}^{nM}\}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Multidimensional FFT
+\end_layout
+
+\begin_layout Standard
+By similar development, the DFT of the function shifted in multiple dimensions
+ (eg, in 3D) can be computed by FFT as follows
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+X(p,q,r) & = & \sum_{l,m,n}x(l-L,m-M,n-N)W_{2L}^{-(l-L)p}W_{2M}^{-(m-M)q}W_{2N}^{-(n-N)r}\\
+ & = & W_{2L}^{pL}W_{2M}^{qM}W_{2N}^{rN}\sum_{l,m,n}x(l-L,m-M,n-N)W_{2L}^{-lp}W_{2M}^{-mq}W_{2N}^{-nr}\\
+ &  & W_{2L}^{pL}W_{2M}^{qM}W_{2N}^{rN}\operatorname{FFT}\{x(l-L,m-M,n-N)\}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again, re-indexing the conventional FFT output can be done through change
+ of variables in 
+\begin_inset Formula $(p+L,q+M,r+N)\rightarrow(u,v,w)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray*}
+X(u,v,w) & = & W_{2L}^{(u-L)L}W_{2M}^{(v-M)M}W_{2N}^{(w-N)N}\sum_{l,m,n}x(l-L,m-M,n-N)W_{2L}^{-l(u-L)}W_{2M}^{-m(v-M)}W_{2N}^{-n(w-N)}\\
+ & = & W_{2L}^{uL}W_{2M}^{vM}W_{2N}^{wN}(W_{2L}^{-L^{2}}W_{2M}^{-M^{2}}W_{2N}^{-N^{2}})\operatorname{FFT}\{x(l-L,m-M,n-N)W_{2L}^{lL}W_{2M}^{mM}W_{2N}^{nN}\}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Practical Implementation
+\end_layout
+
+\begin_layout Subsection
+Even length computation
+\end_layout
+
+\begin_layout Standard
+For even 
+\begin_inset Formula $N$
+\end_inset
+
+, 
+\begin_inset Formula $M=N/2$
+\end_inset
+
+ and the modulations simplify to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+W_{N}^{kM} & = & e^{i\pi k}=(-1)^{k}\\
+W_{N}^{-M^{2}} & = & e^{-i\pi N/2}=(-1)^{N/2}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In general, the modulation function for the D-dimensional FFT input with
+ D coordinates is 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+m_{in}(\boldsymbol{n})=\prod_{c=1}^{D}e^{i\pi n_{c}}=(-1)^{\sum_{c}^{D}n_{c}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The modulation function for the output function with D-coordinates, and
+ a dimension length vector 
+\begin_inset Formula $\boldsymbol{N}=(N_{1},\, N_{2},\,\dots,\, N_{D})$
+\end_inset
+
+ is 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+m_{out}(\boldsymbol{k})=(-1)^{\frac{1}{2}\sum_{c}^{D}N_{c}}(-1)^{\sum_{c}^{D}k_{c}}=s(\boldsymbol{N})(-1)^{\sum_{c}^{D}k_{c}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
