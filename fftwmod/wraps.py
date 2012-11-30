@@ -33,10 +33,16 @@ try:
         try:
             ft_func = getattr(fftw_ext, fname)
         except AttributeError:
-            raise ValueError(
-                'no transform for this '\
-                'type and rank: %s, %d'%(a.dtype.char, rank)
-                )
+            if a.dtype.char in ('f', 'd'):
+                return _fudge_real_type(
+                    a, axes=axes, shift=shift, inplace=inplace,
+                    fft_sign=fft_sign, normalize=normalize
+                    )
+            else:
+                raise ValueError(
+                    'no transform for this '\
+                    'type and rank: %s, %d'%(a.dtype.char, rank)
+                    )
 
         if inplace:
             # create a very small full rank array b to make ref counts happy
@@ -66,7 +72,7 @@ try:
         if do_fftshift:
             arr = a if inplace else b
             a[:] = np.fft.fftshift(a, axes=axes)
-        
+
         if not inplace:
             if do_fftshift:
                 b[:] = np.fft.fftshift(b, axes=axes)
@@ -107,6 +113,21 @@ except ImportError:
 def _ifftn(*args, **kwargs):
     kwargs['fft_sign'] = +1
     return _fftn(*args, **kwargs)
+
+# In case the input is real type, we'd need to
+# create a complex array anyhow. So create this array up front,
+# copy in the real input array, and then transform inplace.
+def _fudge_real_type(arr, **kwargs):
+    c_arr = np.empty(arr.shape, arr.dtype.char.upper())
+    c_arr.real = arr
+    was_inplace = kwargs.pop('inplace', 0)
+    kwargs['inplace'] = 1
+    _fftn(c_arr, **kwargs)
+    if was_inplace:
+        # do what the man asks
+        arr = c_arr.astype(arr.dtype)
+        return
+    return c_arr
 
 #______________________ Some convenience wrappers ___________________________
 
@@ -176,7 +197,7 @@ def fft2(a, shift=True, inplace=False, axes=(-2,-1)):
     -------
     Transformed array if inplace==False
     """
-    return _fftn(a, axes=axes, shift=shift, inplace=inplace)    
+    return _fftn(a, axes=axes, shift=shift, inplace=inplace)
 
 def ifft2(a, shift=True, inplace=False, normalize=True, axes=(-2,-1)):
     """
@@ -246,5 +267,5 @@ def ifftn(a, shift=True, inplace=False, normalize=True, axes=(-1)):
     return _ifftn(a, axes=axes, shift=shift,
                   inplace=inplace, normalize=normalize)
 
-    
-    
+
+
