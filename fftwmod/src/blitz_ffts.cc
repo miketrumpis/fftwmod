@@ -12,6 +12,7 @@
 #define FORWARD -1
 
 #define MAX(a,b) ( (a) > (b) ? (a) : (b) );
+#define MIN(a,b) ( (a) > (b) ? (b) : (a) );
 
 typedef std::complex<float> cfloat;
 typedef std::complex<double> cdouble;
@@ -217,10 +218,9 @@ void cfloat_fft(blitz::Array<cfloat,N_rank>& ai,
 
 #ifdef THREADED
   pthread_t threads[NTHREADS];
-  // ease up this requirement -- just put all the rest of the data
-  // in the last thread
   //  if( howmany_rank && !(howmany_dims[0].n % NTHREADS) ) {
-  n_threads = NTHREADS;
+  // don't use more threads than number of non-fft slots
+  n_threads = MIN(howmany_dims[0].n, NTHREADS);
   //} else {
 #else
   n_threads = 1;
@@ -438,7 +438,8 @@ void cdouble_fft(blitz::Array<cdouble,N_rank>& ai,
 #ifdef THREADED
   pthread_t threads[NTHREADS];
   //if( howmany_rank && !(howmany_dims[0].n % NTHREADS) ) {
-  n_threads = NTHREADS;
+  // don't use more threads than number of non-fft slots
+  n_threads = MIN(howmany_dims[0].n, NTHREADS);
   //} else {
 #else
   n_threads = 1;
