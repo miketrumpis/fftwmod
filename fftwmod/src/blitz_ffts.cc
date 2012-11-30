@@ -179,13 +179,15 @@ void cfloat_fft(blitz::Array<cfloat,N_rank>& ai,
     }
   }
 
-  fftwf_plan FT;
+  fftwf_plan FT, LFT;
   // howmany_rank -- make sure it is at least 1 (with a degenerate dim if necessary)
   int howmany_rank = MAX(1, ai.rank() - fft_rank); 
   int plan_flags = FFTW_ESTIMATE | FFTW_PRESERVE_INPUT;
   int n_threads;
   fftw_iodim *fft_iodims = new fftw_iodim[fft_rank];
   fftw_iodim *howmany_dims = new fftw_iodim[howmany_rank];
+  // this in case the last thread takes extra data:
+  fftw_iodim *howmany_dims_l; 
   // put down reasonable defaults for 1st non-FFT dimension
   howmany_dims[0].n = 1; howmany_dims[0].is = 1; howmany_dims[0].os = 1;
   // the fft_dims are specified in the arguments, 
@@ -214,25 +216,35 @@ void cfloat_fft(blitz::Array<cfloat,N_rank>& ai,
   }
 
 #ifdef THREADED
-  // short circuit eval I HOPE!
-  // Do threads IF there are multiple FFTs AND the length of the 
-  // leading non-FFT dimension is divided by NTHREADS w/o remainder
   pthread_t threads[NTHREADS];
-  if( howmany_rank && !(howmany_dims[0].n % NTHREADS) ) {
-    n_threads = NTHREADS;
-  } else {
-#endif
-    n_threads = 1;
-#ifdef THREADED
-  }
+  // ease up this requirement -- just put all the rest of the data
+  // in the last thread
+  //  if( howmany_rank && !(howmany_dims[0].n % NTHREADS) ) {
+  n_threads = NTHREADS;
+  //} else {
+#else
+  n_threads = 1;
 #endif
   fft_args *args = new fft_args[n_threads];
-  int block_sz = howmany_dims[0].n / n_threads;
+  int full_sz = howmany_dims[0].n;
+  int block_sz = full_sz / n_threads;
   howmany_dims[0].n = block_sz;
   FT = fftwf_plan_guru_dft(fft_rank, fft_iodims, howmany_rank, howmany_dims,
 			   reinterpret_cast<fftwf_complex*>( ai.data() ),
 			   reinterpret_cast<fftwf_complex*>( ao.data() ),
 			   direction, plan_flags);
+  howmany_dims_l = new fftw_iodim[howmany_rank];
+  memcpy(howmany_dims_l, howmany_dims, howmany_rank * sizeof(fftw_iodim));
+  if (full_sz != n_threads*block_sz) {
+    howmany_dims_l[0].n = full_sz - (n_threads-1)*block_sz;
+    LFT = fftwf_plan_guru_dft(fft_rank, fft_iodims, howmany_rank, 
+			      howmany_dims_l,
+			      reinterpret_cast<fftwf_complex*>( ai.data() ),
+			      reinterpret_cast<fftwf_complex*>( ao.data() ),
+			      direction, plan_flags);
+  } else {
+    LFT = FT;
+  }
   if(FT==NULL) {
     std::cout << "FFTW created a null plan, exiting" << std::endl;
     return;
@@ -242,10 +254,10 @@ void cfloat_fft(blitz::Array<cfloat,N_rank>& ai,
   for(n=0; n<n_threads; n++) {
     (args+n)->i = (char *) (ai.dataZero() + n*block_sz*howmany_dims[0].is);
     (args+n)->o = (char *) (ao.dataZero() + n*block_sz*howmany_dims[0].os);
-    (args+n)->p = (char *) &FT;
+    (args+n)->p = (n < (n_threads-1)) ? (char *) &FT : (char *) &LFT;
     (args+n)->ft_dims = fft_iodims;
     (args+n)->ft_rank = fft_rank;
-    (args+n)->nft_dims = howmany_dims;
+    (args+n)->nft_dims = (n < (n_threads-1)) ? howmany_dims : howmany_dims_l;
     (args+n)->nft_rank = howmany_rank;
     (args+n)->shift = shift;
     (args+n)->direction = direction;
@@ -387,13 +399,15 @@ void cdouble_fft(blitz::Array<cdouble,N_rank>& ai,
     }
   }
 
-  fftw_plan FT;
+  fftw_plan FT, LFT;
   // howmany_rank -- make sure it is at least 1 (with a degenerate dim if necessary)
   int howmany_rank = MAX(1, ai.rank() - fft_rank);
   int plan_flags = FFTW_ESTIMATE | FFTW_PRESERVE_INPUT;
   int n_threads;
   fftw_iodim *fft_iodims = new fftw_iodim[fft_rank];
   fftw_iodim *howmany_dims = new fftw_iodim[howmany_rank];
+  // this in case the last thread takes extra data:
+  fftw_iodim *howmany_dims_l; 
   // put down reasonable defaults for 1st non-FFT dimension
   howmany_dims[0].n = 1; howmany_dims[0].is = 1; howmany_dims[0].os = 1;
   // the fft_dims are specified in the arguments, 
@@ -422,25 +436,34 @@ void cdouble_fft(blitz::Array<cdouble,N_rank>& ai,
   }
   
 #ifdef THREADED
-  // short circuit eval I HOPE!
-  // Do threads IF there are multiple FFTs AND the length of the 
-  // leading non-FFT dimension is divided by NTHREADS w/o remainder
   pthread_t threads[NTHREADS];
-  if( howmany_rank && !(howmany_dims[0].n % NTHREADS) ) {
-    n_threads = NTHREADS;
-  } else {
-#endif
-    n_threads = 1;
-#ifdef THREADED
-  }
+  //if( howmany_rank && !(howmany_dims[0].n % NTHREADS) ) {
+  n_threads = NTHREADS;
+  //} else {
+#else
+  n_threads = 1;
 #endif
   fft_args *args = new fft_args[n_threads];
-  int block_sz = howmany_dims[0].n / n_threads;
+  int full_sz = howmany_dims[0].n;
+  int block_sz = full_sz / n_threads;
   howmany_dims[0].n = block_sz;
   FT = fftw_plan_guru_dft(fft_rank, fft_iodims, howmany_rank, howmany_dims,
 			  reinterpret_cast<fftw_complex*>( ai.data() ),
 			  reinterpret_cast<fftw_complex*>( ao.data() ),
 			  direction, plan_flags);
+  howmany_dims_l = new fftw_iodim[howmany_rank];
+  memcpy(howmany_dims_l, howmany_dims, howmany_rank * sizeof(fftw_iodim));
+  if (full_sz != n_threads*block_sz) {
+    howmany_dims_l[0].n = full_sz - (n_threads-1)*block_sz;
+    LFT = fftw_plan_guru_dft(fft_rank, fft_iodims, howmany_rank, 
+			     howmany_dims_l,
+			     reinterpret_cast<fftw_complex*>( ai.data() ),
+			     reinterpret_cast<fftw_complex*>( ao.data() ),
+			     direction, plan_flags);
+  } else {
+    LFT = FT;
+  }
+
   if(FT==NULL) {
     std::cout << "FFTW created a null plan, exiting" << std::endl;
     return;
@@ -449,10 +472,10 @@ void cdouble_fft(blitz::Array<cdouble,N_rank>& ai,
   for(n=0; n<n_threads; n++) {
     (args+n)->i = (char *) (ai.dataZero() + n*block_sz*howmany_dims[0].is);
     (args+n)->o = (char *) (ao.dataZero() + n*block_sz*howmany_dims[0].os);
-    (args+n)->p = (char *) &FT;
+    (args+n)->p = (n < (n_threads-1)) ? (char *) &FT : (char *) &LFT;
     (args+n)->ft_dims = fft_iodims;
     (args+n)->ft_rank = fft_rank;
-    (args+n)->nft_dims = howmany_dims;
+    (args+n)->nft_dims = (n < (n_threads-1)) ? howmany_dims : howmany_dims_l;
     (args+n)->nft_rank = howmany_rank;
     (args+n)->shift = shift;
     (args+n)->direction = direction;
