@@ -77,6 +77,7 @@ try:
             if do_fftshift:
                 b[:] = np.fft.fftshift(b, axes=axes)
             return b
+        return a
 
 except ImportError:
     fftw_ext = None
@@ -107,7 +108,7 @@ except ImportError:
         if inplace:
             a[:] = b
             del b
-            return
+            return a
         return b
 
 def _ifftn(*args, **kwargs):
@@ -126,12 +127,24 @@ def _fudge_real_type(arr, **kwargs):
     if was_inplace:
         # do what the man asks
         arr = c_arr.astype(arr.dtype)
-        return
+        return arr
     return c_arr
+
+def _pad_dim(arr, n, ax):
+    """Pad (or truncate) array to n points along the axis"""
+    shape = list(arr.shape)
+    shape[ax] = n
+    new_arr = np.zeros(shape, arr.dtype.char.upper())
+
+    arr_sl = [slice(None)] * len(shape)
+    arr_sl[ax] = slice(0, min(n, arr.shape[ax]))
+
+    new_arr[arr_sl] = arr[arr_sl]
+    return new_arr
 
 #______________________ Some convenience wrappers ___________________________
 
-def fft1(a, shift=True, inplace=False, axis=-1):
+def fft1(a, n=None, shift=False, inplace=False, axis=-1):
     """
     Perform a forward FFT on a given axis
 
@@ -151,9 +164,12 @@ def fft1(a, shift=True, inplace=False, axis=-1):
     -------
     Transformed array if inplace==False
     """
+    if n != a.shape[axis]:
+        a = _pad_dim(a, n, axis)
+        inplace = True
     return _fftn(a, axes=(axis,), shift=shift, inplace=inplace)
 
-def ifft1(a, shift=True, inplace=False, normalize=True, axis=-1):
+def ifft1(a, n=None, shift=False, inplace=False, normalize=True, axis=-1):
     """
     Perform an inverse FFT on a given axis
 
@@ -173,11 +189,13 @@ def ifft1(a, shift=True, inplace=False, normalize=True, axis=-1):
     -------
     Transformed array if inplace==False
     """
-
+    if n != a.shape[axis]:
+        a = _pad_dim(a, n, axis)
+        inplace = True
     return _ifftn(a, axes=(axis,), shift=shift,
                   inplace=inplace, normalize=normalize)
 
-def fft2(a, shift=True, inplace=False, axes=(-2,-1)):
+def fft2(a, n=None, shift=False, inplace=False, axes=(-2,-1)):
     """
     Perform a forward FFT on two given axes
 
@@ -197,9 +215,12 @@ def fft2(a, shift=True, inplace=False, axes=(-2,-1)):
     -------
     Transformed array if inplace==False
     """
+    if n != a.shape[axis]:
+        a = _pad_dim(a, n, axis)
+        inplace = True
     return _fftn(a, axes=axes, shift=shift, inplace=inplace)
 
-def ifft2(a, shift=True, inplace=False, normalize=True, axes=(-2,-1)):
+def ifft2(a, n=None, shift=False, inplace=False, normalize=True, axes=(-2,-1)):
     """
     Perform an inverse FFT on two given axes
 
@@ -219,10 +240,13 @@ def ifft2(a, shift=True, inplace=False, normalize=True, axes=(-2,-1)):
     -------
     Transformed array if inplace==False
     """
+    if n != a.shape[axis]:
+        a = _pad_dim(a, n, axis)
+        inplace = True
     return _ifftn(a, axes=axes, shift=shift,
                   inplace=inplace, normalize=normalize)
 
-def fftn(a, shift=True, inplace=False, axes=(-1)):
+def fftn(a, n=None, shift=False, inplace=False, axes=(-1)):
     """
     Perform a forward FFT on any given axes
 
@@ -242,9 +266,12 @@ def fftn(a, shift=True, inplace=False, axes=(-1)):
     -------
     Transformed array if inplace==False
     """
+    if n != a.shape[axis]:
+        a = _pad_dim(a, n, axis)
+        inplace = True
     return _fftn(a, axes=axes, shift=shift, inplace=inplace)
 
-def ifftn(a, shift=True, inplace=False, normalize=True, axes=(-1)):
+def ifftn(a, n=None, shift=False, inplace=False, normalize=True, axes=(-1)):
     """
     Perform an inverse FFT on any given axes
 
@@ -264,6 +291,9 @@ def ifftn(a, shift=True, inplace=False, normalize=True, axes=(-1)):
     -------
     Transformed array if inplace==False
     """
+    if n != a.shape[axis]:
+        a = _pad_dim(a, n, axis)
+        inplace = True
     return _ifftn(a, axes=axes, shift=shift,
                   inplace=inplace, normalize=normalize)
 
