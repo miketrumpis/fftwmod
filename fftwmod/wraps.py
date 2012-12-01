@@ -119,7 +119,7 @@ def _ifftn(*args, **kwargs):
 # create a complex array anyhow. So create this array up front,
 # copy in the real input array, and then transform inplace.
 def _fudge_real_type(arr, **kwargs):
-    c_arr = np.empty(arr.shape, arr.dtype.char.upper())
+    c_arr = np.zeros(arr.shape, arr.dtype.char.upper())
     c_arr.real = arr
     was_inplace = kwargs.pop('inplace', 0)
     kwargs['inplace'] = 1
